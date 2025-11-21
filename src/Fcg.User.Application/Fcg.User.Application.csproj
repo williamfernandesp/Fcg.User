@@ -4,8 +4,13 @@
     <ProjectReference Include="..\Fcg.User.Domain\Fcg.User.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Handlers\" />
+    <Folder Include="Requests\" />
+  </ItemGroup>
+
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
