@@ -1,6 +1,8 @@
+using Fcg.User.Application.Requests;
 using Fcg.User.Domain.Queries;
 using Fcg.User.Infra;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -90,18 +92,16 @@ var app = builder.Build();
 #region User Endpoints
 app.MapGet("/api/users/{id}", async (Guid id, IMediator _mediator) =>
 {
-    var user = await _mediator.Send(new GetUserByIdRequest { Id = id });
+    var response = await _mediator.Send(new GetUserByIdRequest { Id = id });
 
-    return user is not null ? Results.Ok(user) : Results.NotFound();
+    return Results.Ok(response);
 }).RequireAuthorization().WithTags("Users");
 
 app.MapPut("/api/users/{id}", async (Guid id, [FromBody] UpdateUserRequest request, IMediator _mediator) =>
 {
-    var result = await _mediator.Send(request);
+    var response = await _mediator.Send(request);
 
-    return result.HasErrors
-        ? Results.BadRequest(result)
-        : Results.Ok(result);
+    return Results.Ok(response);
 }).RequireAuthorization().WithTags("Users");
 
 app.MapGet("/api/users", async (IUserQuery _userQuery) =>
@@ -113,20 +113,16 @@ app.MapGet("/api/users", async (IUserQuery _userQuery) =>
 
 app.MapDelete("/api/users/{id}", async (Guid id, IMediator _mediator) =>
 {
-    var result = await _mediator.Send(new DeleteUserRequest { Id = id });
+    var response = await _mediator.Send(new DeleteUserRequest { Id = id });
 
-    return result.HasErrors
-        ? Results.BadRequest(result)
-        : Results.Ok(result);
+    return Results.Ok(response);
 }).RequireAuthorization("AdminPolicy").WithTags("Users");
 
 app.MapPost("/api/users", async ([FromBody] RegisterUserRequest request, IMediator _mediator) =>
 {
-    var result = await _mediator.Send(request);
+    var response = await _mediator.Send(request);
 
-    return result.HasErrors
-        ? Results.BadRequest(result)
-        : Results.Ok(result);
+    return Results.Ok(response);
 }).RequireAuthorization("InternalPolicy").WithTags("Users");
 
 app.MapPost("/api/users/{id}/credit", async (Guid id, [FromBody] CreditWalletRequest request, IMediator _mediator) =>
