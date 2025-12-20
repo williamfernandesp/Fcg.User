@@ -72,21 +72,21 @@ builder.Services.AddAuthorization(options =>
 var app = builder.Build();
 
 #region User Endpoints
-app.MapGet("/api/users/{id}", async (Guid id, IMediator _mediator) =>
+app.MapGet("users/{id}", async (Guid id, IMediator _mediator) =>
 {
     var response = await _mediator.Send(new GetUserByIdRequest { Id = id });
 
     return Results.Ok(response);
 }).AllowAnonymous().WithTags("Users");
 
-app.MapGet("/api/users", async ([AsParameters] GetUsersRequest request, IMediator _mediator) =>
+app.MapGet("users", async ([AsParameters] GetUsersRequest request, IMediator _mediator) =>
 {
     var response = await _mediator.Send(request);
 
     return Results.Ok(response);
 }).AllowAnonymous().WithTags("Users");
 
-app.MapPut("/api/users/{id}", async (Guid id, [FromBody] UpdateUserRequest request, IMediator _mediator) =>
+app.MapPut("users/{id}", async (Guid id, [FromBody] UpdateUserRequest request, IMediator _mediator) =>
 {
     request.Id = id;
 
@@ -95,21 +95,21 @@ app.MapPut("/api/users/{id}", async (Guid id, [FromBody] UpdateUserRequest reque
     return Results.Ok(response);
 }).AllowAnonymous().WithTags("Users");
 
-app.MapDelete("/api/users/{id}", async (Guid id, IMediator _mediator) =>
+app.MapDelete("users/{id}", async (Guid id, IMediator _mediator) =>
 {
     var response = await _mediator.Send(new DeleteUserRequest { Id = id });
 
     return Results.Ok(response);
 }).AllowAnonymous().WithTags("Users");
 
-app.MapPost("/api/users", async ([FromBody] RegisterUserRequest request, IMediator _mediator) =>
+app.MapPost("users", async ([FromBody] RegisterUserRequest request, IMediator _mediator) =>
 {
     var response = await _mediator.Send(request);
 
     return Results.Ok(response);
 }).AllowAnonymous().WithTags("Users");
 
-app.MapPost("/api/users/{id}/credit", async (Guid id, [FromBody] CreditWalletRequest request, IMediator _mediator) =>
+app.MapPost("users/{id}/credit", async (Guid id, [FromBody] CreditWalletRequest request, IMediator _mediator) =>
 {
     request.Id = id;
 
@@ -118,7 +118,7 @@ app.MapPost("/api/users/{id}/credit", async (Guid id, [FromBody] CreditWalletReq
     return Results.Ok(response);
 }).AllowAnonymous().WithTags("Users");
 
-app.MapPost("/api/users/{id}/debit", async (Guid id, [FromBody] DebitWalletRequest request, IMediator _mediator) =>
+app.MapPost("users/{id}/debit", async (Guid id, [FromBody] DebitWalletRequest request, IMediator _mediator) =>
 {
     request.Id = id;
 
