@@ -1,4 +1,5 @@
 using Fcg.User.Application.Requests;
+using Fcg.User.Application.Responses;
 using Fcg.User.Domain;
 using MediatR;
 

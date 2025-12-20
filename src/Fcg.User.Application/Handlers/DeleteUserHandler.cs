@@ -1,6 +1,7 @@
 using Fcg.User.Application.Requests;
 using Fcg.User.Common;
 using Fcg.User.Domain;
+using Fcg.User.Proxy.Auth.Client.Interface;
 using MediatR;
 
 namespace Fcg.User.Application.Handlers
@@ -8,10 +9,12 @@ namespace Fcg.User.Application.Handlers
     public class DeleteUserHandler : IRequestHandler<DeleteUserRequest, Response>
     {
         private readonly IUserRepository _userRepository;
+        private readonly IClientAuth _clientAuth;
 
-        public DeleteUserHandler(IUserRepository userRepository)
+        public DeleteUserHandler(IUserRepository userRepository, IClientAuth clientAuth)
         {
             _userRepository = userRepository;
+            _clientAuth = clientAuth;
         }
 
         public async Task<Response> Handle(DeleteUserRequest request, CancellationToken cancellationToken)
@@ -28,7 +31,12 @@ namespace Fcg.User.Application.Handlers
 
             await _userRepository.DeleteAsync(user);
 
-            // Manda email para auth para atualizar
+            var externalResponse = await _clientAuth.DeleteAuthUserAsync(user.Id);
+
+            if (externalResponse.HasErrors)
+            {
+                response.AddError("Erro ao criar usuário externo.");
+            }
 
             return response;
         }

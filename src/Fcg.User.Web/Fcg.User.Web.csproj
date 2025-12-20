@@ -20,6 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Fcg.User.Application\Fcg.User.Application.csproj" />
     <ProjectReference Include="..\Fcg.User.Infra\Fcg.User.Infra.csproj" />
+    <ProjectReference Include="..\Fcg.User.Proxy.Auth\Fcg.User.Proxy.Auth.csproj" />
   </ItemGroup>
 
 </Project>

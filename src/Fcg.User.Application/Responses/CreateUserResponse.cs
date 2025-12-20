@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Fcg.User.Application.Handlers
+namespace Fcg.User.Application.Responses
 {
     public class CreateUserResponse
     {

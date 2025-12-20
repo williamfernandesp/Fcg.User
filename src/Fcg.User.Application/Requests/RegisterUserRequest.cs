@@ -1,4 +1,4 @@
-using Fcg.User.Application.Handlers;
+using Fcg.User.Application.Responses;
 using Fcg.User.Common;
 using MediatR;
 

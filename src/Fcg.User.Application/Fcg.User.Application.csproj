@@ -3,6 +3,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Fcg.User.Common\Fcg.User.Common.csproj" />
     <ProjectReference Include="..\Fcg.User.Domain\Fcg.User.Domain.csproj" />
+    <ProjectReference Include="..\Fcg.User.Proxy.Auth\Fcg.User.Proxy.Auth.csproj" />
   </ItemGroup>
 
   <ItemGroup>

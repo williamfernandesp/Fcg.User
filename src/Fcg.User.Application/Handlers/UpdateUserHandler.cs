@@ -1,6 +1,7 @@
 using Fcg.User.Application.Requests;
 using Fcg.User.Common;
 using Fcg.User.Domain;
+using Fcg.User.Proxy.Auth.Client.Interface;
 using MediatR;
 
 namespace Fcg.User.Application.Handlers
@@ -8,10 +9,12 @@ namespace Fcg.User.Application.Handlers
     public class UpdateUserHandler : IRequestHandler<UpdateUserRequest, Response>
     {
         private readonly IUserRepository _userRepository;
+        private readonly IClientAuth _clientAuth;
 
-        public UpdateUserHandler(IUserRepository userRepository)
+        public UpdateUserHandler(IUserRepository userRepository, IClientAuth clientAuth)
         {
             _userRepository = userRepository;
+            _clientAuth = clientAuth;
         }
 
         public async Task<Response> Handle(UpdateUserRequest request, CancellationToken cancellationToken)
@@ -30,7 +33,12 @@ namespace Fcg.User.Application.Handlers
 
             await _userRepository.SaveAsync(user);
 
-            // Manda email para auth para atualizar
+            var externalResponse = await _clientAuth.UpdateAuthUserAsync(user.Id, request.Email);
+
+            if (externalResponse.HasErrors)
+            {
+                response.AddError("Erro ao criar usuário externo.");
+            }
 
             return response;
         }
