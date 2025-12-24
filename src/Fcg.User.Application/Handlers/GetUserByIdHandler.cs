@@ -2,6 +2,7 @@ using Fcg.User.Application.Requests;
 using Fcg.User.Common;
 using Fcg.User.Domain.Queries;
 using Fcg.User.Proxy.Auth.Client.Interface;
+using Fcg.User.Proxy.Games.Client.Interface;
 using MediatR;
 
 namespace Fcg.User.Application.Handlers
@@ -10,11 +11,13 @@ namespace Fcg.User.Application.Handlers
     {
         private readonly IUserQuery _userQuery;
         private readonly IClientAuth _clientAuth;
+        private readonly IClientGames _clientGame;
 
-        public GetUserByIdHandler(IUserQuery userQuery, IClientAuth clientAuth)
+        public GetUserByIdHandler(IUserQuery userQuery, IClientAuth clientAuth, IClientGames clientGame)
         {
             _userQuery = userQuery;
             _clientAuth = clientAuth;
+            _clientGame = clientGame;
         }
 
         public async Task<Response> Handle(GetUserByIdRequest request, CancellationToken cancellationToken)
@@ -31,16 +34,46 @@ namespace Fcg.User.Application.Handlers
 
             var externalResponse = await _clientAuth.GetAuthUserAsync(user.Id);
 
-            if (externalResponse.HasErrors)
+            if (externalResponse.HasErrors || string.IsNullOrEmpty(externalResponse.Result.Email))
             {
-                response.AddError("Erro ao criar usuário externo.");
+                response.AddError("Erro ao buscar usuário externo.");
+                return response;
             }
 
             user.Email = externalResponse.Result.Email;
 
-            var gameIds = user.Library != null ? [.. user.Library!.Select(g => g.Id)] : new List<Guid>();
+            var gameIds = await _userQuery.GetGamesByUserIdAsync(user.Id, cancellationToken) ?? [];
 
-            // TODO: Tem que pegar os jogos da biblioteca do usuário no projeto Game.
+            if (gameIds.Any())
+            {
+                foreach ( var gameId in gameIds)
+                {
+                    var externalGameResponse = await _clientGame.GetGameAsync(gameId);
+
+                    if (externalGameResponse.HasErrors)
+                    {
+                        response.AddError("Erro ao obter jogos da biblioteca do usuário.");
+                    }
+                    else
+                    {
+                        var gameResposne = externalGameResponse.Result;
+
+                        var game = new Domain.Queries.Responses.GameResponse
+                        {
+                            Id = gameResposne.Id,
+                            Title = gameResposne.Title,
+                            Description = gameResposne.Description,
+                            Price = gameResposne.Price,
+                            Genre = gameResposne.Genre
+                        };
+
+                        if (game != null)
+                        {
+                            user.Library?.Add(game);
+                        }
+                    }
+                }
+            }
 
             response.SetResult(user);
 

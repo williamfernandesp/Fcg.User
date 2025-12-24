@@ -14,6 +14,13 @@ namespace Fcg.User.Infra.Queries
             _context = context;
         }
 
+        public async Task<IEnumerable<Guid>> GetGamesByUserIdAsync(Guid id, CancellationToken cancellationToken)
+        {
+            return await(from u in _context.UserGames
+                         where u.UserId == id
+                         select u.GameId).ToListAsync(cancellationToken);
+        }
+
         public async Task<GetUserResponse?> GetUserByIdAsync(Guid id, CancellationToken cancellationToken)
         {
             return await (from u in _context.Users
@@ -22,7 +29,7 @@ namespace Fcg.User.Infra.Queries
                               {
                                   Id = u.Id,
                                   UserName = u.Name,
-                                  Wallet = u.Wallet
+                                  Wallet = u.Wallet,
                               }).FirstOrDefaultAsync(cancellationToken);
         }
 

@@ -6,6 +6,6 @@ namespace Fcg.User.Domain.Queries.Responses
         public string UserName { get; set; } = null!;
         public decimal Wallet { get; set; }
         public string? Email { get; set; }
-        public IReadOnlyCollection<GameResponse>? Library { get; set; }
+        public List<GameResponse> Library { get; set; } = new();
     }
 }
