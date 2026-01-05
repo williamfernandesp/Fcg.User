@@ -3,6 +3,7 @@ using Fcg.User.Application.Requests;
 using Fcg.User.Infra;
 using Fcg.User.Proxy.Auth;
 using Fcg.User.Proxy.Games;
+using Fcg.User.Proxy.Payment;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -14,6 +15,7 @@ builder.Services.AddApplicationLayer();
 builder.Services.AddInfraLayer(builder.Configuration);
 builder.Services.AddInfraProxyAuth(builder.Configuration);
 builder.Services.AddInfraProxyGames(builder.Configuration);
+builder.Services.AddInfraProxyPayment(builder.Configuration);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

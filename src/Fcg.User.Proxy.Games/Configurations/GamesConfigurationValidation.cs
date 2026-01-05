@@ -8,7 +8,7 @@ namespace Fcg.User.Proxy.Games.Configurations
         {
             if (string.IsNullOrWhiteSpace(options.Url))
             {
-                return ValidateOptionsResult.Fail("Undefined 'Url' in configuration section GamesUrl");
+                return ValidateOptionsResult.Fail("Undefined 'Url' in configuration section GamesConfiguration");
             }
             return ValidateOptionsResult.Success;
         }

@@ -5,6 +5,7 @@
     <ProjectReference Include="..\Fcg.User.Domain\Fcg.User.Domain.csproj" />
     <ProjectReference Include="..\Fcg.User.Proxy.Auth\Fcg.User.Proxy.Auth.csproj" />
     <ProjectReference Include="..\Fcg.User.Proxy.Games\Fcg.User.Proxy.Games.csproj" />
+    <ProjectReference Include="..\Fcg.User.Proxy.Payment\Fcg.User.Proxy.Payment.csproj" />
   </ItemGroup>
 
   <ItemGroup>

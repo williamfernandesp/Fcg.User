@@ -8,7 +8,7 @@ namespace Fcg.User.Proxy.Auth.Configurations
         {
             if (string.IsNullOrWhiteSpace(options.Url))
             {
-                return ValidateOptionsResult.Fail("Undefined 'Url' in configuration section UserUrl");
+                return ValidateOptionsResult.Fail("Undefined 'Url' in configuration section AuthConfiguration");
             }
 
             return ValidateOptionsResult.Success;

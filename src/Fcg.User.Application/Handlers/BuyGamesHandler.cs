@@ -2,6 +2,7 @@
 using Fcg.User.Common;
 using Fcg.User.Domain;
 using Fcg.User.Proxy.Games.Client.Interface;
+using Fcg.User.Proxy.Payment.Client.Interfaces;
 using MediatR;
 
 namespace Fcg.User.Application.Handlers
@@ -10,11 +11,13 @@ namespace Fcg.User.Application.Handlers
     {
         private readonly IUserRepository _userRepository;
         private readonly IClientGames _clientGame;
+        private readonly IClientPayment _clientPayment;
 
-        public BuyGamesHandler(IClientGames clientGame, IUserRepository userRepository)
+        public BuyGamesHandler(IClientGames clientGame, IUserRepository userRepository, IClientPayment clientPayment)
         {
             _clientGame = clientGame;
             _userRepository = userRepository;
+            _clientPayment = clientPayment;
         }
 
         public async Task<Response> Handle(BuyGamesRequest request, CancellationToken cancellationToken)
@@ -41,6 +44,14 @@ namespace Fcg.User.Application.Handlers
 
                 foreach (var gameData in externalGameResponse.Result)
                 {
+                    var paymentResult = await _clientPayment.ProcessPaymentAsync(user.Id, gameData.Id);
+                    
+                    if (paymentResult.HasErrors)
+                    {
+                        response.AddError($"Pagamento recusado para o jogo {gameData.Id}: {paymentResult.Erros.FirstOrDefault()}");
+                        return response;
+                    }
+
                     user.AddGameToLibrary(gameData.Id);
                 }
 
@@ -50,7 +61,7 @@ namespace Fcg.User.Application.Handlers
                 }
                 catch (Exception ex)
                 {
-                    response.AddError($"Erro ao salvar compra: {ex.Message}");
+                    response.AddError($"Erro ao atualizar biblioteca local: {ex.Message}");
                 }
             }
 
