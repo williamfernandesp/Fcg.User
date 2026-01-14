@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="12.0.0" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.3.7" />
     <PackageReference Include="MediatR" Version="12.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.22" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.22">
@@ -20,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Fcg.User.Application\Fcg.User.Application.csproj" />
     <ProjectReference Include="..\Fcg.User.Infra\Fcg.User.Infra.csproj" />
+    <ProjectReference Include="..\..\..\Fcg.Payment\src\Fcg.Contracts\Fcg.Contracts.csproj" />
     <ProjectReference Include="..\Fcg.User.Proxy.Auth\Fcg.User.Proxy.Auth.csproj" />
     <ProjectReference Include="..\Fcg.User.Proxy.Games\Fcg.User.Proxy.Games.csproj" />
   </ItemGroup>

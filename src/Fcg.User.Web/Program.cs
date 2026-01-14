@@ -5,9 +5,11 @@ using Fcg.User.Proxy.Auth;
 using Fcg.User.Proxy.Games;
 using Fcg.User.Proxy.Payment;
 using MediatR;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Fcg.User.Web.Consumers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +18,30 @@ builder.Services.AddInfraLayer(builder.Configuration);
 builder.Services.AddInfraProxyAuth(builder.Configuration);
 builder.Services.AddInfraProxyGames(builder.Configuration);
 builder.Services.AddInfraProxyPayment(builder.Configuration);
+
+builder.Services.AddMassTransit(x =>
+{
+    x.AddConsumer<PaymentApprovedConsumer>();
+
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        var host = builder.Configuration["RabbitMq:Host"] ?? "localhost";
+        var vhost = builder.Configuration["RabbitMq:VirtualHost"] ?? "/";
+        var username = builder.Configuration["RabbitMq:Username"] ?? "guest";
+        var password = builder.Configuration["RabbitMq:Password"] ?? "guest";
+
+        cfg.Host(host, vhost, h =>
+        {
+            h.Username(username);
+            h.Password(password);
+        });
+
+        cfg.ReceiveEndpoint("fcg-user-payment-approved", e =>
+        {
+            e.ConfigureConsumer<PaymentApprovedConsumer>(context);
+        });
+    });
+});
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
