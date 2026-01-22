@@ -24,6 +24,7 @@
     <ProjectReference Include="..\..\..\Fcg.Payment\src\Fcg.Contracts\Fcg.Contracts.csproj" />
     <ProjectReference Include="..\Fcg.User.Proxy.Auth\Fcg.User.Proxy.Auth.csproj" />
     <ProjectReference Include="..\Fcg.User.Proxy.Games\Fcg.User.Proxy.Games.csproj" />
+    <ProjectReference Include="..\..\..\Fcg.Shared\Fcg.Observability\Fcg.Observability.csproj" />
   </ItemGroup>
 
 </Project>

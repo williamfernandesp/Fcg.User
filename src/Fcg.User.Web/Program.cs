@@ -4,6 +4,7 @@ using Fcg.User.Infra;
 using Fcg.User.Proxy.Auth;
 using Fcg.User.Proxy.Games;
 using Fcg.User.Proxy.Payment;
+using Fcg.Observability;
 using MediatR;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,12 @@ using System.Text;
 using Fcg.User.Web.Consumers;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add OpenTelemetry observability
+builder.Services.AddObservability(builder.Configuration, "fcg-user");
+
+// Add health checks
+builder.Services.AddHealthChecks();
 
 builder.Services.AddApplicationLayer();
 builder.Services.AddInfraLayer(builder.Configuration);
@@ -179,6 +186,9 @@ app.MapPost("users/{id}/debit", async (Guid id, [FromBody] DebitWalletRequest re
 #region Middleware Pipeline
 app.UseSwagger();
 app.UseSwaggerUI();
+
+// Add observability endpoints (health checks, metrics)
+app.UseObservabilityEndpoints();
 
 app.UseHttpsRedirection();
 
