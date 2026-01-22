@@ -77,7 +77,13 @@ namespace Fcg.User.Proxy.Auth.Client
                 var json = await httpResponseMessage.Content.ReadAsStringAsync();
 
                 if (!string.IsNullOrWhiteSpace(json))
-                    response.Result = JsonSerializer.Deserialize<GetUserAuthResponse>(json);
+                {
+                    var options = new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    };
+                    response.Result = JsonSerializer.Deserialize<GetUserAuthResponse>(json, options);
+                }
             }
             catch (Exception ex)
             {
